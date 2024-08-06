@@ -1,26 +1,28 @@
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 function App() {
 const [counter, setCounter] = useState(0);
-const [todo, setTodo] = useState([]);
+const [inputValue, setInputValue] = useState(1);
 
-useEffect(()=>{
-  console.log(counter+" inside use");
-  fetch("https://sum-server.100xdevs.com/todos")
-  .then(async (res) =>{
-    const json = await res.json();
-    setTodo(json.todos);
-  })
-},[counter])
+let count = useMemo(()=>{
+  let finalCount=0;
+  for(let i = 1; i <= inputValue; i++){
+    finalCount = finalCount+i;
+  }
+  return finalCount;
+},[inputValue]);
 
 return (
   <div>
-    {console.log(counter+" inside app")}
+    <input onChange={function(e){
+      setInputValue(e.target.value);
+    }} placeholder={"Find sum on 1 to n"}></input>
+    <br></br>
+    Sum from 1 to {inputValue} is {count};
+    <br></br>
     <button onClick={()=>{
       setCounter(counter+1);
-    }}>Counter</button>
-    {todo.map(todo => {return <div key={todo.id}><p> title={todo.title} description={todo.description}
-      </p></div>} )}
+    }}>Counter ({counter}) </button>
   </div>
 )
 }
